@@ -7,7 +7,7 @@ import authRoutes from './routes/auth.js';
 
 
 const app = express();
-const PORT = 8080;
+const PORT = 5050;
 
 app.use(express.json());
 
