@@ -12,6 +12,13 @@ router.get('/', loadMenu, (req, res) => {
 // lägga till en ny produkt
 router.post('/', loadMenu, validateNewProduct, (req, res) => {
     const { id, title, desc, price } = req.body;
+    
+    // Kontrollera om en produkt med samma ID redan finns
+    const existingProduct = req.menu.find(product => product.id === id);
+    if (existingProduct) {
+        return res.status(400).json({ error: "En produkt med detta ID finns redan." });
+    }
+
     const newProduct = {
         id,
         title,
@@ -19,9 +26,11 @@ router.post('/', loadMenu, validateNewProduct, (req, res) => {
         price,
         createdAt: new Date().toISOString()
     };
+
     req.menu.push(newProduct);  
     res.status(201).json(newProduct);
 });
+
 
 router.put('/:id', loadMenu, (req, res) => {
     const { id } = req.params; 
@@ -29,6 +38,7 @@ router.put('/:id', loadMenu, (req, res) => {
 
     const product = req.menu.find(p => p.id === numId);
 
+// Använd sedan numericId för att hantera din DELETE-logik
     if (!product) {
         return res.status(404).json({ message: "Produkten hittades inte" });
     }
@@ -63,5 +73,18 @@ router.put('/:id', loadMenu, (req, res) => {
 
     res.json(product);
 });
+
+router.delete('/:id', loadMenu, (req, res) => {
+    const numId = Number(req.params.id);
+    const index = req.menu.findIndex(p => p.id === numId);
+
+    if (index === -1) {
+        return res.status(404).json({ message: "Produkten hittades inte" });
+    }
+
+    req.menu.splice(index, 1);
+    res.status(200).json({ message: "Produkten har tagits bort" });
+});
+
 
 export default router;
