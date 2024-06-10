@@ -17,6 +17,11 @@ const validateLogin = (req, res, next) => {
             return res.status(401).json({ error: 'Ogiltiga användaruppgifter har angetts.' });
         }
 
+        // Kontrollera användarrollen
+        if (user.role !== 'admin') {
+            return res.status(403).json({ error: 'Åtgärden kräver administratörsbehörighet' });
+        }
+
         req.user = user;
         next();
     });
