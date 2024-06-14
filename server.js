@@ -1,37 +1,24 @@
-// server.js
-
 import express from 'express';
 import menuRoutes from './routes/menu.js';
-import bodyParser from 'body-parser';
+import { basicAuth } from './middleware/auth.js';
 
 const app = express();
-const port = 5050;
+const PORT = 5050;
 
-app.use(bodyParser.json());
-app.use('/menu', menuRoutes);
+app.use(express.json());
 
-// Middleware för admin-roll
-export function admin(req, res, next) {
-    // Simulering av admin-authentication
-    const isAdmin = true; // Här bör du implementera riktig admin-authentication
-    if (isAdmin) {
-        return next();
-    } else {
-        return res.status(403).json({ message: 'Åtkomst nekad' });
-    }
-}
+// Tillåt åtkomst till menyn utan autentisering
+app.use('/menu/menu', menuRoutes);
 
-// Middleware för 404-felhantering
-app.use((req, res, next) => {
-    return res.status(404).json({ message: 'Route not found' });
+// Använd autentiseringsmiddleware för övriga menyrutter
+app.use('/menu', basicAuth, menuRoutes);
+
+// Fånga ogiltiga rutter
+app.use((req, res) => {
+    res.status(404).json({ message: 'Route not found' });
 });
 
-// Middleware för global felhantering
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({ message: 'Something went wrong' });
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
 
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-});

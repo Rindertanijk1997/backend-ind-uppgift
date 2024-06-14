@@ -1,7 +1,7 @@
 import express from 'express';
 import Datastore from 'nedb';
 import Joi from 'joi';
-import admin from '../middlewares/admin.js';
+import admin from '../middleware/admin.js';
 import menu from './menu.js';
 
 const dbCampaign = new Datastore({ filename: './db/campaigns.db', autoload: true });

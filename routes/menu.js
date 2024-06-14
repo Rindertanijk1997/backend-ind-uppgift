@@ -1,8 +1,7 @@
-// routes/menu.js
-
 import express from 'express';
 import Datastore from 'nedb';
 import Joi from 'joi';
+import { adminOnly } from '../middleware/auth.js';
 
 const dbMenu = new Datastore({ filename: './db/menu.db', autoload: true });
 const dbCampaigns = new Datastore({ filename: './db/campaigns.db', autoload: true });
@@ -21,36 +20,55 @@ const campaignSchema = Joi.object({
 
 const router = express.Router();
 
-// Middleware för admin-autentisering (förutsätter att du har implementerat din egen admin-authentication)
-router.use(adminAuth);
+// Hämta hela menyn (tillåtet för alla användare)
+router.get('/menu', (req, res) => {
+    dbMenu.find({}, (err, docs) => {
+        if (err) {
+            return res.status(500).json({ message: 'Det gick inte att hämta menyn', error: err });
+        }
+        res.status(200).json({ menu: docs });
+    });
+});
 
-// Lägg till en produkt
-router.post('/add-product', (req, res) => {
+// Lägg till en produkt (endast admin)
+router.post('/add-product', adminOnly, (req, res) => {
     const { error } = menuSchema.validate(req.body);
     if (error) {
         return res.status(400).json({ message: 'Felaktig input', details: error.details });
     }
 
     const { id, title, price, description } = req.body;
-    const newProduct = {
-        id,
-        title,
-        price,
-        description,
-        createdAt: new Date(),
-    };
 
-    // Lägg till produkten i databasen
-    dbMenu.insert(newProduct, (err, newDoc) => {
+    // Kontrollera om produkten redan finns med det angivna ID:t
+    dbMenu.findOne({ id }, (err, existingProduct) => {
         if (err) {
-            return res.status(500).json({ message: 'Det gick inte att lägga till produkten', error: err });
+            return res.status(500).json({ message: 'Database error', error: err });
         }
-        res.status(201).json({ message: 'Produkt tillagd', product: newDoc });
+
+        if (existingProduct) {
+            return res.status(400).json({ message: `Produkt med ID ${id} finns redan` });
+        }
+
+        // Om produkten inte finns, lägg till den
+        const newProduct = {
+            id,
+            title,
+            price,
+            description,
+            createdAt: new Date(),
+        };
+
+        dbMenu.insert(newProduct, (err, newDoc) => {
+            if (err) {
+                return res.status(500).json({ message: 'Det gick inte att lägga till produkten', error: err });
+            }
+            res.status(201).json({ message: 'Produkt tillagd', product: newDoc });
+        });
     });
 });
 
-// Uppdatera en produkt
-router.put('/update-product/:id', (req, res) => {
+// Uppdatera en produkt (endast admin)
+router.put('/update-product/:id', adminOnly, (req, res) => {
     const productId = req.params.id;
     const { title, price, description } = req.body;
 
@@ -61,7 +79,6 @@ router.put('/update-product/:id', (req, res) => {
         modifiedAt: new Date(),
     };
 
-    // Uppdatera produkten i databasen baserat på id
     dbMenu.update({ id: productId }, { $set: updatedProduct }, { returnUpdatedDocs: true }, (err, numAffected, affectedDocuments, upsert) => {
         if (err) {
             return res.status(500).json({ message: 'Det gick inte att uppdatera produkten', error: err });
@@ -70,11 +87,10 @@ router.put('/update-product/:id', (req, res) => {
     });
 });
 
-// Ta bort en produkt
-router.delete('/delete-product/:id', (req, res) => {
+// Ta bort en produkt (endast admin)
+router.delete('/delete-product/:id', adminOnly, (req, res) => {
     const productId = req.params.id;
 
-    // Ta bort produkten från databasen baserat på id
     dbMenu.remove({ id: productId }, {}, (err, numRemoved) => {
         if (err) {
             return res.status(500).json({ message: 'Det gick inte att ta bort produkten', error: err });
@@ -83,8 +99,8 @@ router.delete('/delete-product/:id', (req, res) => {
     });
 });
 
-// Lägg till en kampanj
-router.post('/add-campaign', (req, res) => {
+// Lägg till en kampanj (endast admin)
+router.post('/add-campaign', adminOnly, (req, res) => {
     const { error } = campaignSchema.validate(req.body);
     if (error) {
         return res.status(400).json({ message: 'Felaktig input', details: error.details });
@@ -97,7 +113,6 @@ router.post('/add-campaign', (req, res) => {
         createdAt: new Date(),
     };
 
-    // Lägg till kampanjen i databasen
     dbCampaigns.insert(newCampaign, (err, newDoc) => {
         if (err) {
             return res.status(500).json({ message: 'Det gick inte att lägga till kampanjen', error: err });
@@ -106,26 +121,4 @@ router.post('/add-campaign', (req, res) => {
     });
 });
 
-// Hämta hela menyn
-router.get('/menu', (req, res) => {
-    dbMenu.find({}, (err, docs) => {
-        if (err) {
-            return res.status(500).json({ message: 'Det gick inte att hämta menyn', error: err });
-        }
-        res.status(200).json({ menu: docs });
-    });
-});
-
-// Middleware för admin-roll
-function adminAuth(req, res, next) {
-    // Simulering av admin-authentication
-    const isAdmin = true; // Här bör du implementera riktig admin-authentication
-    if (isAdmin) {
-        return next();
-    } else {
-        return res.status(403).json({ message: 'Åtkomst nekad' });
-    }
-}
-
 export default router;
-
