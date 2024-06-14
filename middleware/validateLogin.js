@@ -1,4 +1,4 @@
-import db from '../db/index.js';
+import db from '../routes/index.js';
 
 const validateLogin = (req, res, next) => {
     const { username, password } = req.body;
@@ -15,6 +15,11 @@ const validateLogin = (req, res, next) => {
 
         if (!user || user.password !== password) {
             return res.status(401).json({ error: 'Ogiltiga användaruppgifter har angetts.' });
+        }
+
+        // Kontrollera användarrollen
+        if (user.role !== 'admin') {
+            return res.status(403).json({ error: 'Åtgärden kräver administratörsbehörighet' });
         }
 
         req.user = user;

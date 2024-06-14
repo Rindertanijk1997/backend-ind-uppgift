@@ -1,4 +1,3 @@
-
 import express from 'express';
 import loadMenu from '../middlewares/loadMenu.js';
 
@@ -10,4 +9,3 @@ router.get('/', loadMenu, (req, res) => {
 });
 
 export default router;
-

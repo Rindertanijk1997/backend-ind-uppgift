@@ -1,22 +1,24 @@
 import express from 'express';
-import aboutRouter from './routes/about.js'
-import orderRoutes from './routes/orders.js';
-import productsRoutes from './routes/products.js';
-import userRoutes from './routes/users.js';
-import authRoutes from './routes/auth.js';
-
+import menuRoutes from './routes/menu.js';
+import { basicAuth } from './middleware/auth.js';
 
 const app = express();
-const PORT = 8080;
+const PORT = 5050;
 
 app.use(express.json());
 
-app.use('/about', aboutRouter);
-app.use('/orders', orderRoutes);
-app.use('/products', productsRoutes);
-app.use('/users', userRoutes);
-app.use('/auth', authRoutes);
+// Tillåt åtkomst till menyn utan autentisering
+app.use('/menu/menu', menuRoutes);
+
+// Använd autentiseringsmiddleware för övriga menyrutter
+app.use('/menu', basicAuth, menuRoutes);
+
+// Fånga ogiltiga rutter
+app.use((req, res) => {
+    res.status(404).json({ message: 'Route not found' });
+});
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
+

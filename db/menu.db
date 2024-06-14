@@ -1,0 +1,16 @@
+{"id":"2","title":"Espresso","price":25,"description":"A short, strong coffee.","createdAt":{"$$date":1718375889400},"_id":"3ng22Ih8E1vKV4cZ"}
+{"id":"2","title":"Espresso","price":25,"description":"A short, strong coffee.","createdAt":{"$$date":1718374859467},"_id":"78FQ60ipDxgkh6qA"}
+{"id":"1","title":"Espresso","price":25,"description":"A short, strong coffee.","createdAt":{"$$date":1718374175222},"_id":"7dmMwNt9GpRFmNnG"}
+{"id":"1","title":"Espresso","price":25,"description":"A short, strong coffee.","createdAt":{"$$date":1718374853614},"_id":"Bv5SxVfp5N1fmZlT"}
+{"title":"Espresso","price":25,"description":"A short, strong coffee.","createdAt":{"$$date":1718373892905},"_id":"CTUW77G951iDW07l"}
+{"id":6,"title":"Cortado","desc":"Bryggd på månadens bönor.","price":39,"about":"Välkommen till kafferosteri Power Nappers - en passionerad bryggning av tradition och innovation...","_id":"Il0uvppcTiaHUmE5"}
+{"id":"1","title":"Espresso","price":25,"description":"A short, strong coffee.","createdAt":{"$$date":1718374849030},"_id":"JXQq3Xm60S2Tqsef"}
+{"id":3,"title":"Cappuccino","desc":"Bryggd på månadens bönor.","price":49,"about":"Välkommen till kafferosteri Power Nappers - en passionerad bryggning av tradition och innovation...","_id":"KIUdeEcmpuOv84lM"}
+{"id":4,"title":"Latte Macchiato","desc":"Bryggd på månadens bönor.","price":49,"about":"Välkommen till kafferosteri Power Nappers - en passionerad bryggning av tradition och innovation...","_id":"QoeVqNwQIRoHF2kq"}
+{"id":"2","title":"Espresso","price":25,"description":"A short, strong coffee.","createdAt":{"$$date":1718375902578},"_id":"RzBaDXeB8FxGdY5B"}
+{"id":2,"title":"Caffè Doppio","desc":"Bryggd på månadens bönor.","price":49,"about":"Välkommen till kafferosteri Power Nappers - en passionerad bryggning av tradition och innovation...","_id":"ZppeLjil9IqZFxpg"}
+{"id":"2","title":"Espresso","price":25,"description":"A short, strong coffee.","createdAt":{"$$date":1718377678245},"_id":"ieKyKJEGbVp62QwG"}
+{"id":5,"title":"Kaffe Latte","desc":"Bryggd på månadens bönor.","price":54,"about":"Välkommen till kafferosteri Power Nappers - en passionerad bryggning av tradition och innovation...","_id":"k1ZZAkc3HseWOie3"}
+{"id":1,"title":"Bryggkaffe","desc":"Bryggd på månadens bönor.","price":39,"about":"Välkommen till kafferosteri Power Nappers - en passionerad bryggning av tradition och innovation...","_id":"s7jSGFeFf4iBqQEE"}
+{"id":"7","title":"Espresso","price":25,"description":"A short, strong coffee.","createdAt":{"$$date":1718379403222},"_id":"zSWet6SC2XfIuTJV"}
+{"id":"8","title":"Espresso","price":25,"description":"A short, strong coffee.","createdAt":{"$$date":1718379460901},"_id":"jvzBbVH6P05qwjw7"}

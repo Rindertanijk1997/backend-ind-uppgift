@@ -1,8 +1,8 @@
-import db from '../db/index.js';
+import db from '../routes/index.js';
 import { v4 as uuidv4 } from 'uuid';
 
 const createUser = (req, res, next) => {
-    const { username, password } = req.body;
+    const { username, password, role } = req.body; 
 
     db.findOne({ _id: 'userIdCounter' }, (err, counter) => {
         if (err) {
@@ -15,6 +15,7 @@ const createUser = (req, res, next) => {
             userId: uuidv4(), 
             username,
             password,
+            role: role || 'user', 
             createdAt: new Date()
         };
 
@@ -23,7 +24,6 @@ const createUser = (req, res, next) => {
                 return res.status(500).json({ error: 'Det gick inte att skapa användare' });
             }
 
-           
             db.update({ _id: 'userIdCounter' }, { $set: { value: newUserId } }, { upsert: true }, (err) => {
                 if (err) {
                     console.error('Det gick inte att uppdatera userId counter');
