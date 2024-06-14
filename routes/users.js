@@ -10,4 +10,3 @@ router.post('/register', validateRegistration, createUser, (req, res) => {
 
 export default router;
 
-

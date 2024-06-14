@@ -1,4 +1,4 @@
-import db from '../db/index.js';
+import db from '../routes/index.js';
 
 const validateRegistration = (req, res, next) => {
     const { username, password } = req.body;

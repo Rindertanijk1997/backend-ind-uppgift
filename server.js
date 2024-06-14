@@ -1,22 +1,37 @@
-import express from 'express';
-import aboutRouter from './routes/about.js'
-import orderRoutes from './routes/orders.js';
-import productsRoutes from './routes/products.js';
-import userRoutes from './routes/users.js';
-import authRoutes from './routes/auth.js';
+// server.js
 
+import express from 'express';
+import menuRoutes from './routes/menu.js';
+import bodyParser from 'body-parser';
 
 const app = express();
-const PORT = 5050;
+const port = 5050;
 
-app.use(express.json());
+app.use(bodyParser.json());
+app.use('/menu', menuRoutes);
 
-app.use('/about', aboutRouter);
-app.use('/orders', orderRoutes);
-app.use('/products', productsRoutes);
-app.use('/users', userRoutes);
-app.use('/auth', authRoutes);
+// Middleware för admin-roll
+export function admin(req, res, next) {
+    // Simulering av admin-authentication
+    const isAdmin = true; // Här bör du implementera riktig admin-authentication
+    if (isAdmin) {
+        return next();
+    } else {
+        return res.status(403).json({ message: 'Åtkomst nekad' });
+    }
+}
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+// Middleware för 404-felhantering
+app.use((req, res, next) => {
+    return res.status(404).json({ message: 'Route not found' });
+});
+
+// Middleware för global felhantering
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ message: 'Something went wrong' });
+});
+
+app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
 });
